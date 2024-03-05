@@ -21,15 +21,9 @@ const config = {
 new Phaser.Game(config);
 let bird = null;
 let pipes = null;
-let positionX = null;
 
-// Define constants for configuration
 const PIPE_COUNT = 5; // Number of pipe pairs
 const PIPE_START_X = 500; // X position of the first pipe
-// const PIPE_START_Y = 200; // Y position of the upper pipes
-// const PIPE_MIN_SPACING_X = 250; 
-// Horizontal spacing between pipe pairs
-const PIPE_SPACING_Y = 200; // Vertical spacing between upper and lower pipes
 const VELOCITY = -150;
 const initialBirdPosition = {
   x: 100,
@@ -51,14 +45,11 @@ function create () {
   // Create a group for all pipes
   pipes = this.physics.add.group();
 
-  // 1. przerabiamy PIPE_SPACING_Y na metodę, która losuje odległość np: od 200 do 400.
-  // Docelowo będzie się losował PIPE_SPACING_Y i pozycja górnej rury na tej podstawie.
-  
   for (let i = 0; i < PIPE_COUNT; i++) {
-    positionX = PIPE_START_X + i * getRandomXDistance();
-    let positionY = Phaser.Math.Between(10, 300);
-    let pipeUp = pipes.create(positionX, positionY, 'pipe').setOrigin(0, 1);
-    let pipeDown = pipes.create(positionX, positionY + PIPE_SPACING_Y, 'pipe').setOrigin(0, 0);
+    let positionX = PIPE_START_X + i * getRandomXDistance();
+    let bottomOfPipeUp = getRandomBottomOfPipeUp();
+    let pipeUp = pipes.create(positionX, bottomOfPipeUp, 'pipe').setOrigin(0, 1);
+    let pipeDown = pipes.create(positionX, bottomOfPipeUp + getRandomYDistance(), 'pipe').setOrigin(0, 0);
     pipeUp.body.velocity.x = VELOCITY;
     pipeDown.body.velocity.x = VELOCITY;
   }
@@ -104,4 +95,12 @@ function getRightMostPipe() {
 
 function getRandomXDistance() {
   return Phaser.Math.Between(100, 101);
+}
+
+function getRandomBottomOfPipeUp() {
+  return Phaser.Math.Between(10, 300); 
+}
+
+function getRandomYDistance() {
+  return Phaser.Math.Between(200, 290);
 }
