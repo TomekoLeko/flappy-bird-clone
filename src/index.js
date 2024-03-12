@@ -22,7 +22,7 @@ new Phaser.Game(config);
 let bird = null;
 let pipes = null;
 
-const PIPE_COUNT = 5; // Number of pipe pairs
+const PIPE_PAIRS = 5; // Number of pipe pairs
 const PIPE_START_X = 500; // X position of the first pipe
 const VELOCITY = -150;
 const initialBirdPosition = {
@@ -45,7 +45,7 @@ function create () {
   // Create a group for all pipes
   pipes = this.physics.add.group();
 
-  for (let i = 0; i < PIPE_COUNT; i++) {
+  for (let i = 0; i < PIPE_PAIRS; i++) {
     let positionX = PIPE_START_X + i * getRandomXDistance();
     let bottomOfPipeUp = getRandomBottomOfPipeUp();
     let pipeUp = pipes.create(positionX, bottomOfPipeUp, 'pipe').setOrigin(0, 1);
@@ -80,8 +80,14 @@ function recyclePipes() {
   pipes.getChildren().forEach(pipe => {
     if (pipe.x < 0 ) {
       pipe.x = toRight
+      pipe.y = 10
+      // ZADANIE: zamiast 10 niech się losuje (dla górnej rury) tak jak w create
     }
   })
+  // NOTATKI- ustawianie igreków:
+  // 1.Losujemy i przypisujemy bottomOfPipeUp [getRandomBottomOfPipeUp()] podczas tworzenia górnej rury
+  // 2.Losujemy dystans [getRandomYDistance()], dodajemy do bottomOfPipeUp i przypisujmey podczas tworzenia dolnej rury
+  // Trudność: w powyzszej pętli nie rozrozniamy dolna/gorna
 }
 
 function getRightMostPipe() {
