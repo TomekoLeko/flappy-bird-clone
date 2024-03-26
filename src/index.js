@@ -45,6 +45,13 @@ function create () {
   // Create a group for all pipes
   pipes = this.physics.add.group();
 
+  // ZASTANOWIĆ SIĘ JAK ZLIKWIDOWAĆ BUGA ZWIĄZANEGO Z- linia 51: let positionX = PIPE_START_X + i * getRandomXDistance();
+  // Powinniśmy w jakiś sposób kumuluwać wartość positionX
+
+  // Pomysł A:
+  // krok 1: zdefiniować positionX poza pętlą
+  // krok 2: zwiększać ją o jakąś wartość przy kazdej iteracji
+
   for (let i = 0; i < PIPE_PAIRS; i++) {
     let positionX = PIPE_START_X + i * getRandomXDistance();
     let bottomOfPipeUp = getRandomBottomOfPipeUp();
@@ -63,8 +70,6 @@ function update (time, delta) {
   recyclePipes(); 
 }
 
-
-
 function resetGame() {
   bird.y = initialBirdPosition.y; 
   bird.body.velocity.y = 0;
@@ -76,18 +81,15 @@ function flap() {
 
 function recyclePipes() {
   let toRight = getRightMostPipe() + getRandomXDistance();
+  let bottomOfPipeUp = getRandomBottomOfPipeUp();
 
   pipes.getChildren().forEach(pipe => {
     if (pipe.x < 0 ) {
       pipe.x = toRight
-      pipe.y = 10
-      // ZADANIE: zamiast 10 niech się losuje (dla górnej rury) tak jak w create
+      pipe.y = bottomOfPipeUp;
+      bottomOfPipeUp = bottomOfPipeUp + getRandomYDistance()
     }
   })
-  // NOTATKI- ustawianie igreków:
-  // 1.Losujemy i przypisujemy bottomOfPipeUp [getRandomBottomOfPipeUp()] podczas tworzenia górnej rury
-  // 2.Losujemy dystans [getRandomYDistance()], dodajemy do bottomOfPipeUp i przypisujmey podczas tworzenia dolnej rury
-  // Trudność: w powyzszej pętli nie rozrozniamy dolna/gorna
 }
 
 function getRightMostPipe() {
