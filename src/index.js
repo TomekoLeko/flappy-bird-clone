@@ -23,7 +23,6 @@ let bird = null;
 let pipes = null;
 
 const PIPE_PAIRS = 5; // Number of pipe pairs
-const PIPE_START_X = 500; // X position of the first pipe
 const VELOCITY = -150;
 const initialBirdPosition = {
   x: 100,
@@ -45,15 +44,8 @@ function create () {
   // Create a group for all pipes
   pipes = this.physics.add.group();
 
-  // ZASTANOWIĆ SIĘ JAK ZLIKWIDOWAĆ BUGA ZWIĄZANEGO Z- linia 51: let positionX = PIPE_START_X + i * getRandomXDistance();
-  // Powinniśmy w jakiś sposób kumuluwać wartość positionX
-
-  // Pomysł A:
-  // krok 1: zdefiniować positionX poza pętlą
-  // krok 2: zwiększać ją o jakąś wartość przy kazdej iteracji
-
   for (let i = 0; i < PIPE_PAIRS; i++) {
-    let positionX = PIPE_START_X + i * getRandomXDistance();
+    let positionX =  getRightMostPipe() + getRandomXDistance();
     let bottomOfPipeUp = getRandomBottomOfPipeUp();
     let pipeUp = pipes.create(positionX, bottomOfPipeUp, 'pipe').setOrigin(0, 1);
     let pipeDown = pipes.create(positionX, bottomOfPipeUp + getRandomYDistance(), 'pipe').setOrigin(0, 0);
@@ -102,7 +94,7 @@ function getRightMostPipe() {
 }
 
 function getRandomXDistance() {
-  return Phaser.Math.Between(100, 101);
+  return Phaser.Math.Between(200, 400);
 }
 
 function getRandomBottomOfPipeUp() {
