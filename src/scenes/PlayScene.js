@@ -21,13 +21,10 @@ class PlayScene extends Phaser.Scene {
       this.load.image('pipe', '../assets/pipe.png'); 
     }
     create() {
-      this.add.image(400, 300, 'sky');
-      this.bird = this.physics.add.sprite(this.initialBirdPosition.x, this.initialBirdPosition.y, 'dude').setOrigin(0, 0);
-      this.input.keyboard.on('keydown_SPACE', this.flap, this);
-      this.input.on('pointerdown', this.flap, this);
-      this.bird.setGravityY(50);
-    
-    this.pipes = this.physics.add.group();
+      this.createBG();
+      this.createBird();
+
+      this.pipes = this.physics.add.group();
 
       for (let i = 0; i < PIPE_PAIRS; i++) {
         let positionX =  this.getRightMostPipe() + this.getRandomXDistance();
@@ -37,6 +34,9 @@ class PlayScene extends Phaser.Scene {
         pipeUp.body.velocity.x = VELOCITY;
         pipeDown.body.velocity.x = VELOCITY;
       }
+
+      this.input.keyboard.on('keydown_SPACE', this.flap, this);
+      this.input.on('pointerdown', this.flap, this);
     }
     update(time, delta) {
       if (this.bird.y > (600 - this.bird.body.height) || this.bird.y < 0) {
@@ -47,9 +47,12 @@ class PlayScene extends Phaser.Scene {
     }
 
     createBG() {
+      this.add.image(400, 300, 'sky');
     }
 
     createBird() {
+      this.bird = this.physics.add.sprite(this.initialBirdPosition.x, this.initialBirdPosition.y, 'dude').setOrigin(0, 0);
+      this.bird.setGravityY(50);
     }
 
     createPipes() {
