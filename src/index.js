@@ -16,10 +16,10 @@ const config = {
 };
 
 new Phaser.Game(config);
-let pipes = null;
+// let pipes = null;
 
-const PIPE_PAIRS = 5; // Number of pipe pairs
-const VELOCITY = -150;
+// const PIPE_PAIRS = 5; 
+// const VELOCITY = -150;
 
 function preload () {
 

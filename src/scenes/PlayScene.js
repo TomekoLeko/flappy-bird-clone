@@ -23,7 +23,8 @@ class PlayScene extends Phaser.Scene {
     create() {
       this.add.image(400, 300, 'sky');
       this.bird = this.physics.add.sprite(this.initialBirdPosition.x, this.initialBirdPosition.y, 'dude').setOrigin(0, 0);
-      this.input.keyboard.on('keydown_SPACE', this.flap);
+      this.input.keyboard.on('keydown_SPACE', this.flap, this);
+      this.input.on('pointerdown', this.flap, this);
       this.bird.setGravityY(50);
     
     this.pipes = this.physics.add.group();
@@ -45,10 +46,22 @@ class PlayScene extends Phaser.Scene {
       this.recyclePipes(); 
     }
 
+    createBG() {
+    }
+
+    createBird() {
+    }
+
+    createPipes() {
+    }
+
+    handleInputs() {
+      
+    }
+
     flap() {
-        console.log("Flap flap flap: " + this.bird)
         this.bird.body.velocity.y = -100;
-      }
+    }
     getRightMostPipe() {
       let rightMostX = 0
     
@@ -68,23 +81,21 @@ class PlayScene extends Phaser.Scene {
     }
 
     resetGame() {
-      console.log("Game over")
-      // bird.y = initialBirdPosition.y; 
-      // bird.body.velocity.y = 0;
+      this.bird.y = this.initialBirdPosition.y; 
+      this.bird.body.velocity.y = 0;
     }
 
     recyclePipes() {
-      console.log("recycle pipes")
-      // let toRight = getRightMostPipe() + getRandomXDistance();
-      // let bottomOfPipeUp = getRandomBottomOfPipeUp();
+      let toRight = this.getRightMostPipe() + this.getRandomXDistance();
+      let bottomOfPipeUp = this.getRandomBottomOfPipeUp();
     
-      // pipes.getChildren().forEach(pipe => {
-      //   if (pipe.x < 0 ) {
-      //     pipe.x = toRight
-      //     pipe.y = bottomOfPipeUp;
-      //     bottomOfPipeUp = bottomOfPipeUp + getRandomYDistance()
-      //   }
-      // })
+      this.pipes.getChildren().forEach(pipe => {
+        if (pipe.x < 0 ) {
+          pipe.x = toRight
+          pipe.y = bottomOfPipeUp;
+          bottomOfPipeUp = bottomOfPipeUp + this.getRandomYDistance()
+        }
+      })
     }
 }
 
