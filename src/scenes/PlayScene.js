@@ -9,10 +9,12 @@ class PlayScene extends Phaser.Scene {
         super('PlayScene');
         this.initialBirdPosition = {
             x: 100,
-            y: 45 
+            y: 300 
           }
         this.bird = null;
         this.pipes = null;
+        this.score = 0;
+        this.scoreText = '';
         
     }
     preload() {
@@ -25,6 +27,7 @@ class PlayScene extends Phaser.Scene {
       this.createBird();
       this.createPipes();
       this.createColiders();
+      this.createScore();
       this.handleInputs();
     }
 
@@ -40,6 +43,7 @@ class PlayScene extends Phaser.Scene {
     createBird() {
       this.bird = this.physics.add.sprite(this.initialBirdPosition.x, this.initialBirdPosition.y, 'bird').setOrigin(0, 0);
       this.bird.setGravityY(50);
+      this.bird.setCollideWorldBounds(true);
     }
 
     createPipes() {
@@ -47,6 +51,9 @@ class PlayScene extends Phaser.Scene {
 
       for (let i = 0; i < PIPE_PAIRS; i++) {
         let positionX = this.getRightMostPipe() + this.getRandomXDistance();
+        if (i==0) {
+          positionX += 200;
+        }
         let bottomOfPipeUp = this.getRandomBottomOfPipeUp();
         let pipeUp = this.pipes.create(positionX, bottomOfPipeUp, 'pipe').setOrigin(0, 1).setImmovable(true);
         let pipeDown = this.pipes.create(positionX, bottomOfPipeUp + this.getRandomYDistance(), 'pipe').setOrigin(0, 0).setImmovable(true);
@@ -59,14 +66,19 @@ class PlayScene extends Phaser.Scene {
       this.physics.add.collider(this.bird, this.pipes, this.gameOver, null, this);
     }
 
+    createScore() {
+      this.score = 0;
+      this.scoreText = this.add.text(16, 16, `score: ${0}`, { fontSizes: '32px', fill: '#000'});
+    }
+
     handleInputs() {
       this.input.keyboard.on('keydown_SPACE', this.flap, this);
       this.input.on('pointerdown', this.flap, this);
     }
 
     updateGameStatus() {
-      if (this.bird.y > (600 - this.bird.body.height) || this.bird.y < 0) {
-        this.resetGame();
+      if (this.bird.getBounds().bottom >= 600  || this.bird.y <= 0) {
+        this.gameOver();
       }
     }
 
@@ -82,7 +94,7 @@ class PlayScene extends Phaser.Scene {
       return rightMostX
     }
     getRandomXDistance() {
-      return Phaser.Math.Between(200, 400);
+      return Phaser.Math.Between(400, 600);
     }
     getRandomBottomOfPipeUp() {
       return Phaser.Math.Between(10, 300); 
@@ -91,14 +103,21 @@ class PlayScene extends Phaser.Scene {
       return Phaser.Math.Between(200, 290);
     }
 
-    resetGame() {
-      this.bird.y = this.initialBirdPosition.y; 
-      this.bird.body.velocity.y = 0;
-    }
+    // resetGame() {
+    //   this.bird.y = this.initialBirdPosition.y; 
+    //   this.bird.body.velocity.y = 0;
+    // }
 
     gameOver() {
       this.bird.setTint(0xEE4824);
       this.physics.pause();
+      this.time.addEvent( {
+        delay: 1000,
+        callback: () => {
+          this.scene.restart();
+        },
+        loop: false
+      })
     }
 
     recyclePipes() {
