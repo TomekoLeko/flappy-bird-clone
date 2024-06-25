@@ -68,7 +68,8 @@ class PlayScene extends Phaser.Scene {
 
     createScore() {
       this.score = 0;
-      this.scoreText = this.add.text(16, 16, `score: ${0}`, { fontSizes: '32px', fill: '#000'});
+      this.scoreText = this.add.text(16, 16, `Score: ${0}`, { fontSizes: '32px', fill: '#000'});
+      this.add.text(16, 52, `Best score: ${localStorage.getItem('bestScore')}`, { fontSizes: '18px', fill: '#000'});
     }
 
     handleInputs() {
@@ -85,6 +86,12 @@ class PlayScene extends Phaser.Scene {
     flap() {
         this.bird.body.velocity.y = -100;
     }
+
+    increaseScore() {
+      this.score++;
+      this.scoreText.setText(`Score: ${this.score}`)
+    }
+
     getRightMostPipe() {
       let rightMostX = 0
     
@@ -103,14 +110,17 @@ class PlayScene extends Phaser.Scene {
       return Phaser.Math.Between(200, 290);
     }
 
-    // resetGame() {
-    //   this.bird.y = this.initialBirdPosition.y; 
-    //   this.bird.body.velocity.y = 0;
-    // }
-
     gameOver() {
       this.bird.setTint(0xEE4824);
       this.physics.pause();
+
+      const bestScoreString = localStorage.getItem('bestScore');
+      const bestScore = bestScoreString && parseInt(bestScoreString, 10)
+
+      if(!bestScore || this.score > bestScore) {
+        localStorage.setItem('bestScore', this.score);
+      }
+
       this.time.addEvent( {
         delay: 1000,
         callback: () => {
@@ -123,9 +133,16 @@ class PlayScene extends Phaser.Scene {
     recyclePipes() {
       let toRight = this.getRightMostPipe() + this.getRandomXDistance();
       let bottomOfPipeUp = this.getRandomBottomOfPipeUp();
-    
+      let scoreIncreased = false;
+
       this.pipes.getChildren().forEach(pipe => {
-        if (pipe.x < 0 ) {
+        if (pipe.getBounds().right < 0 ) {
+
+          if(!scoreIncreased) {
+            this.increaseScore();
+            scoreIncreased = true;
+          }
+
           pipe.x = toRight
           pipe.y = bottomOfPipeUp;
           bottomOfPipeUp = bottomOfPipeUp + this.getRandomYDistance()
