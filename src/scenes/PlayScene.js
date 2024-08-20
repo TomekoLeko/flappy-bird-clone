@@ -15,12 +15,7 @@ class PlayScene extends Phaser.Scene {
       this.config = config;   
       this.initialBirdPosition = this.config.startPosition;
       this.isGamePaused = false;
-    }
-    preload() {
-      this.load.image('sky', '../assets/sky.png');
-      this.load.image('bird', '../assets/bird.png');
-      this.load.image('pipe', '../assets/pipe.png'); 
-      this.load.image('pause', '../assets/pause.png');
+      this.blockFlap = false;
     }
     create() {
       this.createBG();
@@ -82,6 +77,7 @@ class PlayScene extends Phaser.Scene {
       pauseButton.setInteractive();
 
       pauseButton.on('pointerdown', () => {
+        this.blockFlap = true;
         if (this.isGamePaused == true) {
           this.physics.resume();
           this.isGamePaused = false;
@@ -104,7 +100,12 @@ class PlayScene extends Phaser.Scene {
     }
 
     flap() {
-      this.bird.body.velocity.y = -100;
+      if(this.blockFlap) {
+        this.blockFlap = false;
+      }
+      else {
+        this.bird.body.velocity.y = -100;
+      }
     }
 
     increaseScore() {

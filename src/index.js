@@ -1,5 +1,7 @@
 import Phaser from "phaser";
+import MenuScene from "./scenes/MenuScene";
 import PlayScene from "./scenes/PlayScene";
+import PreloadScene from "./scenes/PreloadScene";
 
 const WIDTH = 800
 const HEIGTH = 600
@@ -21,7 +23,7 @@ const config = {
       // gravity: { y: 50 }
     }
   },
-  scene: [new PlayScene(SHARED_CONFIG)]
+  scene: [new PreloadScene(SHARED_CONFIG), new MenuScene(SHARED_CONFIG), new PlayScene(SHARED_CONFIG)]
 };
 
 new Phaser.Game(config);
