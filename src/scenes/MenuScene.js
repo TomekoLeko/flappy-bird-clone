@@ -1,15 +1,17 @@
-import Phaser from "phaser";
+import BaseScene from './BaseScene';
 
-class MenuScene extends Phaser.Scene {
+class MenuScene extends BaseScene {
 
     constructor(config) {
-      super('MenuScene');
+      super('MenuScene', config);
 
       this.config = config;   
     }
     create() {
+      super.create()
       this.createBG();
       this.createStart();
+      this.add.text(this.config.width - 435, this.config.height - 350, 'Menu:', { fontSizes: '32px', fill: '#000'});
     }
 
     update(time, delta) {
