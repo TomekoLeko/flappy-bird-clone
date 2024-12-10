@@ -4,36 +4,23 @@ class MenuScene extends BaseScene {
 
     constructor(config) {
       super('MenuScene', config);
+      this.menu = [
+        {scene: 'PlayScene', text: 'Play'},
+        {scene: 'ScoreScene', text: 'Score'},
+        {scene: null, text: 'Exit'}
+      ]
 
       this.config = config;   
     }
     create() {
       super.create()
-      this.createBG();
-      this.createStart();
-      this.add.text(this.config.width - 435, this.config.height - 350, 'Menu:', { fontSizes: '32px', fill: '#000'});
+      this.createMenu(this.menu);
     }
 
     update(time, delta) {
 
     }
 
-    createBG() {
-      this.add.image(400, 300, 'sky');
-    }
-
-    createStart() {
-      let startButton = this.add.image(this.config.width - 400, this.config.height - 300, 'start')
-      .setScale(2)
-      .setOrigin(1)
-      .setInteractive()
-
-      startButton.setInteractive();
-
-      startButton.on('pointerdown', () => {
-        this.scene.start("PlayScene")
-      });
-    }
       
 }
 
